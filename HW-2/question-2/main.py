@@ -47,24 +47,17 @@ def orientation(point_one, point_two, point_three):
     return val
 
 
-def main():
-    count_city, count_country = input().split()
-    count_city, count_country = [int(count_city), int(count_country)]
-    countries = []
+def init_countries(count_city, count_country, countries):
     for i in range(count_country):
         countries.append(City(i))
-
     for i in range(count_city):
         country_num, longitude, latitude = input().split()
         country_num, longitude, latitude = [int(country_num), float(longitude), float(latitude)]
         vector = np.array([longitude, latitude])
         countries[country_num].add_city(vector)
 
-    for country in countries:
-        country.build_convex()
 
-    new_cities_num = int(input())
-    selected_countries = []
+def choose_closest_country(countries, new_cities_num, selected_countries):
     for i in range(new_cities_num):
         longitude, latitude = input().split()
         longitude, latitude = [float(longitude), float(latitude)]
@@ -87,6 +80,8 @@ def main():
         most_close_city.build_convex()
         selected_countries.append(most_close_city.number)
 
+
+def print_result(countries, selected_countries):
     print(*selected_countries)
     for country in countries:
         country.hull.sort(key=lambda x: (x[0], x[1]), reverse=False)
@@ -96,6 +91,22 @@ def main():
             format_vector_y = "{:.2f}".format(element[1])
             print(f"[{format_vector_x}, {format_vector_y}]", end=" ")
         print()
+
+
+def main():
+    count_city, count_country = input().split()
+    count_city, count_country = [int(count_city), int(count_country)]
+    countries = []
+    init_countries(count_city, count_country, countries)
+
+    for country in countries:
+        country.build_convex()
+
+    new_cities_num = int(input())
+    selected_countries = []
+    choose_closest_country(countries, new_cities_num, selected_countries)
+
+    print_result(countries, selected_countries)
 
 
 if __name__ == "__main__":
